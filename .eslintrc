@@ -6,6 +6,15 @@
     "settings": {
         "react": {
             "version": "detect"
+        },
+        "import/resolver": {
+            "node": {
+                "extensions": [
+                    ".ts",
+                    ".tsx",
+                    ".native.js"
+                ]
+            }
         }
     },
     "extends": [
