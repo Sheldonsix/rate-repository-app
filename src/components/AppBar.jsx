@@ -4,6 +4,9 @@ import theme from "../theme";
 import Text from "./Text";
 import { Link } from 'react-router-native';
 import { Platform } from "react-native";
+import { useQuery } from '@apollo/client';
+import { ME } from "../graphql/querise";
+
 
 const styles = StyleSheet.create({
     container: {
@@ -23,6 +26,8 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+    const { data } = useQuery(ME);
+    console.log('me', data);
     return (
         <View>
             <View style={styles.container}>
@@ -32,11 +37,18 @@ const AppBar = () => {
                             Repositories
                         </Text>
                     </Link>
-                    <Link to="/signin" >
-                        <Text color="barText" fontWeight="bold" fontSize="subheading" style={styles.text}>
-                            Signin
-                        </Text>
-                    </Link>
+                    {data.me === null ?
+                        <Link to="/signin" >
+                            <Text color="barText" fontWeight="bold" fontSize="subheading" style={styles.text}>
+                                Signin
+                            </Text>
+                        </Link> :
+                        <Link to="/signout" >
+                            <Text color="barText" fontWeight="bold" fontSize="subheading" style={styles.text}>
+                                Signout
+                            </Text>
+                        </Link>
+                    }
                 </ScrollView>
             </View>
         </View>)

@@ -42,7 +42,8 @@ const cardBodyStyles = StyleSheet.create({
     },
     text: {
         backgroundColor: "#0366d6",
-        borderRadius: 3,
+        borderRadius: 5,
+        padding: 3
     }
 })
 
