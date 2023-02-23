@@ -8,7 +8,7 @@ import {useApolloClient} from "@apollo/client"
 const styles = StyleSheet.create({
     button: {
         padding: 5,
-        margin: 10
+        margin: 10,
     }
 }) 
 
@@ -23,7 +23,7 @@ const Signout = () => {
         navigate('/signin');
     }
     return(
-        <Button onPress={handleSignout} mode="elevated" style={styles.button}>Sign Out</Button>
+        <Button buttonColor="#d6394c" onPress={handleSignout} mode="contained" style={styles.button}>Sign Out</Button>
     )
 }
 

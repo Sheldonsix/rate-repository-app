@@ -6,3 +6,28 @@ export const AUTHENTICATE = gql`
         }
     }
 `
+
+export const CREATE_REVIEW = gql`
+    mutation CreateReview($review: CreateReviewInput) {
+        createReview(review: $review) {
+            createdAt
+            rating
+            repositoryId
+            id
+        }
+    }
+`
+export const DELETE_REVIEW = gql`
+    mutation DeleteReview($deleteReviewId: ID!) {
+        deleteReview(id: $deleteReviewId)
+    }
+`
+
+export const SIGNUP = gql`
+    mutation Mutation($user: CreateUserInput) {
+        createUser(user: $user) {
+            id,
+            username
+        }
+    }
+`

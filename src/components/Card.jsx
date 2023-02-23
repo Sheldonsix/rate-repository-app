@@ -27,8 +27,8 @@ const CardHeader = ({ imageUrl, fullName, description }) => {
                 <Image style={cardHeaderStyles.avatar} source={{ uri: imageUrl }} />
             </View>
             <View style={cardHeaderStyles.infoContainer}>
-                <Text fontWeight="bold" fontSize="sunheading">{fullName}</Text>
-                <Text color="textSecondary">{description}</Text>
+                <Text testID="fullName" fontWeight="bold" fontSize="sunheading">{fullName}</Text>
+                <Text testID="description" color="textSecondary">{description}</Text>
             </View>
         </View>
     );
@@ -50,7 +50,7 @@ const cardBodyStyles = StyleSheet.create({
 const CardBody = ({ language }) => {
     return (
         <View style={cardBodyStyles.container}>
-            <Text color="languageText" style={cardBodyStyles.text}>{language}</Text>
+            <Text testID="language" color="languageText" style={cardBodyStyles.text}>{language}</Text>
         </View>
     );
 };
@@ -73,25 +73,25 @@ const cardFooterStyles = StyleSheet.create({
 const CardFooter = ({ starsCount = 0, forksCount = 0, reviewCount = 0, ratingAverage = 0 }) => {
     return (
         <View style={cardFooterStyles.container}>
-            <View style={cardFooterStyles.textContainer}>
+            <View testID="Stars" style={cardFooterStyles.textContainer}>
                 <Text fontWeight="bold">{Math.round(+starsCount / 1000 * 10) / 10}k</Text>
                 <Text color="textSecondary">
                     Stars
                 </Text>
             </View>
-            <View style={cardFooterStyles.textContainer}>
+            <View testID="Forks" style={cardFooterStyles.textContainer}>
                 <Text fontWeight="bold">{Math.round(+forksCount / 1000 * 10) / 10}k</Text>
                 <Text color="textSecondary">
                     Forks
                 </Text>
             </View>
-            <View style={cardFooterStyles.textContainer}>
+            <View testID="Reivews" style={cardFooterStyles.textContainer}>
                 <Text fontWeight="bold">{reviewCount}</Text>
                 <Text color="textSecondary">
                     Reviews
                 </Text>
             </View>
-            <View style={cardFooterStyles.textContainer}>
+            <View testID="Rating" style={cardFooterStyles.textContainer}>
                 <Text fontWeight="bold">{ratingAverage}</Text>
                 <Text color="textSecondary">
                     Rating
@@ -108,14 +108,13 @@ const cardStyles = StyleSheet.create({
     container: {
         alignItems: 'stretch',
         padding: 15
-
     }
 });
 
 const Card = ({ item }) => {
     return (
         <View style={cardStyles.container}>
-            <CardHeader fullName={item.fullName} imageUrl={item.ownerAvatarUrl} description={item.description} />
+            <CardHeader  fullName={item.fullName} imageUrl={item.ownerAvatarUrl} description={item.description} />
             <CardBody language={item.language} />
             <CardFooter starsCount={item.stargazersCount} forksCount={item.forksCount} reviewCount={item.reviewCount} ratingAverage={item.ratingAverage} />
         </View>

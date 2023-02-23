@@ -15,9 +15,9 @@ const App = () => {
     <NativeRouter>
       <ApolloProvider client={apolloClient}>
         <AuthStorageContext.Provider value={authStorage}>
-          <View style={styles.container}>
-            <Main />
-          </View>
+            <View style={styles.container}>
+              <Main />
+            </View>
         </AuthStorageContext.Provider>
       </ApolloProvider>
     </NativeRouter>
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingTop: Constants.statusBarHeight,
     backgroundColor: '#ecf0f1',
-    padding: 8,
+    // padding: 2,
   },
 });
 

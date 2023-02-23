@@ -1,10 +1,19 @@
-import { FlatList, View, StyleSheet } from 'react-native';
+import { FlatList, View, StyleSheet, Pressable } from 'react-native';
 import RepositoryItem from './RepositoryItem';
+// import { Card, Button,} from 'react-native-paper';
 import { Card } from 'react-native-paper';
 // import useRepositories from '../hooks/useRepositories';
-import { useQuery } from '@apollo/client';
-import { GET_RESPOSITORIES } from '../graphql/querise';
-import Text from './Text';
+// import { useQuery } from '@apollo/client';
+// import { GET_REPOSITORIES_BY_KEYWORD, GET_REPOSITORIES_BY_ORDER } from '../graphql/querise';
+// import Text from './Text';
+import { useNavigate } from "react-router-dom";
+import { Component, useState } from 'react';
+// import { useState } from 'react';
+import { Picker } from '@react-native-picker/picker';
+import { Searchbar } from 'react-native-paper';
+import { useDebounce } from 'use-debounce';
+import useRepositories from '../hooks/useRepositories';
+
 
 const styles = StyleSheet.create({
     separator: {
@@ -12,77 +21,160 @@ const styles = StyleSheet.create({
     },
 });
 
-// const repositories = [
-//     {
-//         id: 'jaredpalmer.formik',
-//         fullName: 'jaredpalmer/formik',
-//         description: 'Build forms in React, without the tears',
-//         language: 'TypeScript',
-//         forksCount: 1589,
-//         stargazersCount: 21553,
-//         ratingAverage: 88,
-//         reviewCount: 4,
-//         ownerAvatarUrl: 'https://avatars2.githubusercontent.com/u/4060187?v=4',
-//     },
-//     {
-//         id: 'rails.rails',
-//         fullName: 'rails/rails',
-//         description: 'Ruby on Rails',
-//         language: 'Ruby',
-//         forksCount: 18349,
-//         stargazersCount: 45377,
-//         ratingAverage: 100,
-//         reviewCount: 2,
-//         ownerAvatarUrl: 'https://avatars1.githubusercontent.com/u/4223?v=4',
-//     },
-//     {
-//         id: 'django.django',
-//         fullName: 'django/django',
-//         description: 'The Web framework for perfectionists with deadlines.',
-//         language: 'Python',
-//         forksCount: 21015,
-//         stargazersCount: 48496,
-//         ratingAverage: 73,
-//         reviewCount: 5,
-//         ownerAvatarUrl: 'https://avatars2.githubusercontent.com/u/27804?v=4',
-//     },
-//     {
-//         id: 'reduxjs.redux',
-//         fullName: 'reduxjs/redux',
-//         description: 'Predictable state container for JavaScript apps',
-//         language: 'TypeScript',
-//         forksCount: 13902,
-//         stargazersCount: 52869,
-//         ratingAverage: 0,
-//         reviewCount: 0,
-//         ownerAvatarUrl: 'https://avatars3.githubusercontent.com/u/13142323?v=4',
-//     },
-// ];
-
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryList = () => {
-    // const {repositories} = useRepositories();
-    const {data, error, loading} = useQuery(GET_RESPOSITORIES, {
-        fetchPolicy: 'cache-and-network'
-    })
 
-    if(loading) {
-        return <View><Text fontSize='bold'>loading……</Text></View>
-    }
-    if(error) {
-        return <View><Text fontSize='bold'>{error.message}</Text></View>
-    }
-    const repositoryNodes = data.repositories ? data.repositories.edges.map(edge => edge.node) : []
-    // const repositoryNodes = repositories? repositories.edges.map(edge => edge.node) : [];
+export const ListHeaderComponent = ({ selectedValue, setSelectedValue }) => {
+    // const [selectedValue, setSelectedValue] = useState('latest');
     return (
-        <FlatList
-            data={repositoryNodes}
-            ItemSeparatorComponent={ItemSeparator}
-            renderItem={({item}) => <Card><RepositoryItem  item={item}/></Card>}
-        // other props
+        <Picker
+            selectedValue={selectedValue}
+            onValueChange={(itemValue) => setSelectedValue(itemValue)}
+            prompt='Select an item...'
+        >
+            <Picker.Item label='Latest repositories' value='latest' />
+            <Picker.Item label='Highest rated repositories' value='highest' />
+            <Picker.Item label='Lowest rated respositories' value='lowest' />
+        </Picker>
+    )
+};
+
+export const SearchBarComponent = ({ searchValue, setSearchQuery }) => {
+    const onChangeSearch = query => setSearchQuery(query);
+    return (
+        <Searchbar
+            placeholder="Search"
+            onChangeText={onChangeSearch}
+            value={searchValue}
         />
     );
 };
+
+
+// export const RepositoryListContainer = ({ data }) => {
+//     const repositoryNodes = data.repositories ? data.repositories.edges.map(edge => edge.node) : []
+//     const navigate = useNavigate();
+//     return (
+//         <View>
+//             <FlatList
+//                 ListHeaderComponent={ListHeaderComponent}
+//                 data={repositoryNodes}
+//                 ItemSeparatorComponent={ItemSeparator}
+//                 renderItem={({ item }) => <Card><Pressable onPress={() => navigate(`/${item.id}`)}><RepositoryItem item={item} /></Pressable></Card>}
+//             />
+//         </View>
+//     );
+// }
+
+const RepositoryList = () => {
+    const navigate = useNavigate();
+    const [selectedValue, setSelectedValue] = useState('latest');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchValue] = useDebounce(searchQuery, 500);
+    const { data, fetchMore } = useRepositories({
+        first: 4,
+        searchKeyword: searchValue,
+        orderBy: selectedValue === 'latest' ? 'CREATED_AT' : 'RATING_AVERAGE',
+        orderDirection: selectedValue === 'latest' ? 'DESC' : selectedValue === 'highest' ? 'DESC' : 'ASC'
+    })
+    // if (searchValue !== '') {
+    //     console.log('searchValue', searchValue);
+    //     ({ data } = useQuery(GET_REPOSITORIES_BY_KEYWORD, {
+    //         fetchPolicy: 'cache-and-network',
+    //         variables: {
+    //             searchKeyword: searchValue
+    //         }
+    //     }))
+    //     console.log(data.repositories.edges.map(edge => edge.node.fullName));
+    // } else if (selectedValue === 'latest') {
+    //     ({ data, fetchMore } = useRepositories({
+    //         first: 4
+    //     }))
+    //     // ({ data, loading } = useQuery(GET_RESPOSITORIES, {
+    //     //     fetchPolicy: 'cache-and-network'
+    //     // }))
+    // } else if (selectedValue === 'highest') {
+    //     ({ data } = useQuery(GET_REPOSITORIES_BY_ORDER, {
+    //         fetchPolicy: 'cache-and-network',
+    //         variables: {
+    //             orderBy: 'RATING_AVERAGE',
+    //             orderDirection: 'DESC'
+    //         }
+    //     }))
+    // } else if (selectedValue === 'lowest') {
+    //     ({ data } = useQuery(GET_REPOSITORIES_BY_ORDER, {
+    //         fetchPolicy: 'cache-and-network',
+    //         variables: {
+    //             orderBy: 'RATING_AVERAGE',
+    //             orderDirection: 'ASC'
+    //         }
+    //     }))
+    // } else return null;
+
+    // if (loading) {
+    //     return <View><Text fontSize='bold'>loading……</Text></View>
+    // }
+
+    const onEndReach = () => {
+        fetchMore();
+    };
+
+    return (
+        <RepositoryListContainer
+            searchValue={searchQuery} setSearchQuery={setSearchQuery}
+            selectedValue={selectedValue} setSelectedValue={setSelectedValue}
+            repositories={data?.repositories}
+            navigate={navigate}
+            onEndReach={onEndReach}
+        />
+    );
+    //     const repositoryNodes = data.repositories ? data.repositories.edges.map(edge => edge.node) : []
+    //     return (
+    //         <View>
+    //             <FlatList
+    //                 ListHeaderComponent={
+    //                 <>
+    //                 {/* <TextInput placeholder='Search' onChangeText={query => setSearchQuery(query)} value={searchValue} /> */}
+    //                 {/* <Searchbar placeholder='Search' onChangeText={query => setSearchQuery(query)} value={searchValue} /> */}
+    //                 <SearchBarComponent searchValue={searchValue} setSearchQuery={setSearchQuery} />
+    //                 <ListHeaderComponent selectedValue={selectedValue} setSelectedValue={setSelectedValue} />
+    //                 </>
+    //             }
+    //                 data={repositoryNodes}
+    //                 ItemSeparatorComponent={ItemSeparator}
+    //                 renderItem={({ item }) => <Card><Pressable onPress={() => navigate(`/${item.id}`)}><RepositoryItem item={item} /></Pressable></Card>}
+    //             />
+    //         </View>
+    //     );
+};
+
+export class RepositoryListContainer extends Component {
+
+    renderHeader = () => {
+        const props = this.props
+        return (
+            <>
+                {/* <Searchbar placeholder='Search' onChangeText={query => props.setSearchQuery(query)} value={props.searchValue} /> */}
+                <SearchBarComponent searchValue={props.searchValue} setSearchQuery={props.setSearchQuery} />
+                <ListHeaderComponent selectedValue={props.selectedValue} setSelectedValue={props.setSelectedValue} />
+            </>
+        )
+    };
+
+    render() {
+        const props = this.props;
+        const repositoryNodes = props.repositories ? props.repositories.edges.map(edge => edge.node) : []
+        return (
+            <FlatList
+                ListHeaderComponent={this.renderHeader}
+                data={repositoryNodes}
+                ItemSeparatorComponent={ItemSeparator}
+                renderItem={({ item }) => <Card><Pressable onPress={() => props.navigate(`/${item.id}`)}><RepositoryItem item={item} /></Pressable></Card>}
+                onEndReached={props.onEndReach}
+                onEndReachedThreshold={0.5}
+            />
+        )
+    }
+}
 
 export default RepositoryList;

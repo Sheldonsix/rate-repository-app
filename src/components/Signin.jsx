@@ -1,4 +1,4 @@
-import { Button, View } from "react-native";
+import { Button, View, StyleSheet } from "react-native";
 import FormikTextInput from "./FormikTextInput";
 import { Formik } from "formik";
 import * as yup from 'yup';
@@ -11,7 +11,7 @@ const initialValues = {
     password: ''
 }
 
-const styles = {
+const styles = StyleSheet.create({
     button: {
         margin: 10,
         padding: 10
@@ -19,19 +19,19 @@ const styles = {
     view: {
         backgroundColor: 'white'
     },
-}
+});
 
 const validationSchema = yup.object().shape({
     password: yup.string().min(6, 'Password must be longer or eaual to 6').required('Password is required'),
     username: yup.string().min(4, 'Username must be longer or equal to 4').required('Username is required')
 })
 
-const SigninForm = ({ onSubmit }) => {
+export const SigninForm = ({ onSubmit }) => {
     return (
         <View style={styles.view}>
-            <FormikTextInput name="username" placeholder="Username" />
-            <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} />
-            <Button title="Sign in" onPress={onSubmit} style={styles.button} />
+            <FormikTextInput name="username" placeholder="Username" testID="usernameInput" />
+            <FormikTextInput name="password" placeholder="Password" secureTextEntry={true} testID="passwordInput" />
+            <Button title="Sign in" onPress={onSubmit} style={styles.button} testID="signinButton" />
         </View>
     )
 };
@@ -42,8 +42,7 @@ const Signin = () => {
     const onSubmit = async (values) => {
         const { username, password } = values;
         try {
-            const data = await signin({ username, password });
-            console.log('data', data)
+            await signin({ username, password });
             navigate('/');
         } catch (e) {
             console.log(e);
