@@ -5,7 +5,7 @@
 ## 相关技术
 
 - React Native
-- Expo
+- React Hooks
 - GraphQL
 - react-native-paper
 
