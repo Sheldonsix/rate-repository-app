@@ -21,6 +21,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         marginBottom: 10
+    },
+    view: {
+        height: '90%'
     }
 });
 
@@ -74,6 +77,7 @@ const MyReviewsList = ({ reviewNodes, fetchMore, refetch }) => {
     }
 
     return (
+        <View style={styles.view}>
         <FlatList
             data={reviewNodes}
             ItemSeparatorComponent={ItemSeparator}
@@ -91,7 +95,7 @@ const MyReviewsList = ({ reviewNodes, fetchMore, refetch }) => {
             onEndReached={onEndReach}
             onEndReachedThreshold={0.5}
         ></FlatList>
-
+</View>
     )
 }
 

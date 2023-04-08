@@ -19,6 +19,9 @@ const styles = StyleSheet.create({
     separator: {
         height: 10,
     },
+    view: {
+        height: '90%'
+    }
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
@@ -120,6 +123,7 @@ const RepositoryList = () => {
     };
 
     return (
+        <View style={styles.view}>
         <RepositoryListContainer
             searchValue={searchQuery} setSearchQuery={setSearchQuery}
             selectedValue={selectedValue} setSelectedValue={setSelectedValue}
@@ -127,6 +131,7 @@ const RepositoryList = () => {
             navigate={navigate}
             onEndReach={onEndReach}
         />
+        </View>
     );
     //     const repositoryNodes = data.repositories ? data.repositories.edges.map(edge => edge.node) : []
     //     return (

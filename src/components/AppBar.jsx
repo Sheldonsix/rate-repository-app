@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
         paddingTop: Constants.statusBarHeight,
         backgroundColor: theme.colors.barBackgroundColor,
         flexDirection: 'row',
-        alignItems: "center"
+        alignItems: "center",
     },
     text: {
         // paddingLeft: 15,

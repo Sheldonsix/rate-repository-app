@@ -9,8 +9,10 @@ const cardHeaderStyles = StyleSheet.create({
         flexGrow: 1
     },
     rating: {
-        paddingLeft: 7,
-        paddingVertical: 7
+        // paddingLeft: 7,
+        // paddingVertical: 7
+        textAlign: "center",
+        // textAlignVertical: "center"
     },
     ratingContainer: {
         width: 45,
@@ -21,6 +23,9 @@ const cardHeaderStyles = StyleSheet.create({
         borderRadius: 90,
         borderColor: "#0366d6",
         borderWidth: 3,
+        display: "flex",
+        justifyContent: "center",
+        // alignContent: "center"
     },
     infoContainer: {
         flexGrow: 1,

@@ -18,10 +18,12 @@ const initialValues = {
 const styles = StyleSheet.create({
     button: {
         margin: 10,
-        padding: 10
+        padding: 10,
     },
     view: {
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        alignContent: 'center',
+        height: '90%'
     },
 })
 
