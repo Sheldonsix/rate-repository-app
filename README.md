@@ -11,6 +11,9 @@
 
 ## APP 截图
 
+- 机型：Pixel XL
+- 系统：Android 11.0
+
 <div style="display: flex; justify-content: center;">
   <img align="left" src="screenshots/pixel-XL-repositories.png" width="200px" />
   <img align="left" src="screenshots/pixel-XL-details.png" width="200px" />
